@@ -4,12 +4,12 @@
 
 package org.keylimebox.mail;
 
-import javax.mail.Part;
 
 /*======================================================================================*/
 /*                                       Imports                                        */
 /*======================================================================================*/
 
+import javax.mail.Part;
 
 /*======================================================================================*/
 /*                           Class Definition / Implementation                          */
@@ -166,7 +166,16 @@ public class EmailAttachment
       }
    }
 
-
+   public boolean isType (String aType)
+   {
+      try {
+         return part.isMimeType (aType);
+      }
+      catch (Throwable myThrowable) {
+         myThrowable.printStackTrace ();
+         return false;
+      }
+   }
 
          /*=============================================================================*/
          /* OPERATION:   getDescription                                                 */

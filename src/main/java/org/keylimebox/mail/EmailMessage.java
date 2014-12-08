@@ -251,6 +251,16 @@ public class EmailMessage
       }
    }
 
+         /*=============================================================================*/
+         /* OPERATION:   getFrom                                                        */
+         /**
+          * The from address.
+          * <p>
+          * @return
+          * <p>
+          * @since Dec 8, 2014
+          */
+         /*=============================================================================*/
    public EmailAddress[] getFrom ()
    {
       try {
@@ -355,19 +365,13 @@ public class EmailMessage
          /*=============================================================================*/
    public boolean hasAttachments ()
    {
-      boolean myFlag = false;
       try {
-         if (message.isMimeType ("multipart/*")) {
-            Multipart myMp = (Multipart) message.getContent ();
-            if (myMp.getCount () > 1) { //TODO ignore text and html content that are inline?
-               myFlag = true;
-            }
-         }
+         return (getAttachments ().length > 0);
       }
       catch (Throwable myException) {
-         myException.printStackTrace();
+         myException.printStackTrace ();
+         return false;
       }
-      return myFlag;
    }
 
          /*=============================================================================*/
@@ -392,12 +396,16 @@ public class EmailMessage
 
                for (int i = 0; i < myTotal; i++) {
 
-                  BodyPart myBodyPart = myMp.getBodyPart (i);
-                  if (myBodyPart.isMimeType ("multipart/alternative")) {
+                  EmailAttachment   myAtt       = new EmailAttachment (myMp.getBodyPart (i), i);
+
+                  if (myAtt.isType ("multipart/alternative")) {
+                     continue;
+                  }
+                  else if (myAtt.isType ("text/*") && "attachment".equalsIgnoreCase (myAtt.getDisposition ()) == false) {
                      continue;
                   }
                   else {
-                     myList.add (new EmailAttachment (myMp.getBodyPart (i), i));
+                     myList.add (myAtt);
                   }
                }
                attachments = myList.toArray (new EmailAttachment [0]);

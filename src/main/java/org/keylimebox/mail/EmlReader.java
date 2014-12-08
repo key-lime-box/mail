@@ -154,6 +154,9 @@ public class EmlReader
          System.out.println ("Body:");
          System.out.println (myEmail.getBody ());
 
+         System.out.println ("Body Plain Text:");
+         System.out.println (myEmail.getTextBody ());
+
       }
       catch (Throwable myThrowable) {
          myThrowable.printStackTrace ();
