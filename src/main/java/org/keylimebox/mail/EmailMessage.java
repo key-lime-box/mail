@@ -519,6 +519,7 @@ public class EmailMessage
          /*=============================================================================*/
    public boolean isHtmlBody ()
    {
+      getBody ();
       return htmlBody;
    }
 
@@ -675,6 +676,7 @@ public class EmailMessage
             else if (myBodyPart.isMimeType ("text/html")) {
                String myString   = getText (myBodyPart);
                if (myString != null) {
+                  htmlBody = aPart.isMimeType ("text/html");
                   return myString;
                }
             }
