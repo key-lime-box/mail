@@ -676,7 +676,7 @@ public class EmailMessage
             else if (myBodyPart.isMimeType ("text/html")) {
                String myString   = getText (myBodyPart);
                if (myString != null) {
-                  htmlBody = aPart.isMimeType ("text/html");
+                  htmlBody = myBodyPart.isMimeType ("text/html");
                   return myString;
                }
             }
