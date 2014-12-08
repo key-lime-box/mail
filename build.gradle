@@ -1,0 +1,77 @@
+buildscript {
+   repositories {
+      mavenCentral()
+      maven { url "http://repo.spring.io/libs-release" }
+   }
+   dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.1.8.RELEASE")
+   }
+}
+
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+version = "1.0"
+group = "org.keylimebox"
+
+repositories {
+    mavenCentral()
+    maven { url "http://repo.spring.io/libs-release" }
+}
+
+configurations {
+   provided
+   providedRuntime
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing { 
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+        maven(MavenPublication) {
+            groupId 'org.keylimebox'
+            artifactId 'keylimebox.mail'
+            version '1.0'
+            
+            from components.java 
+        }
+    }
+    repositories { 
+        maven {
+            url System.getenv()['LOCAL_MAVEN_REPO']
+        }
+    }
+}
+
+
+eclipse.classpath.file {
+    // Classpath entry for Eclipse which changes the order of classpathentries; otherwise no sources for 3rd party jars are shown
+    withXml { xml ->
+        def node = xml.asNode()
+        node.remove( node.find { it.@path == 'org.eclipse.jst.j2ee.internal.web.container' } )
+        node.appendNode( 'classpathentry', [ kind: 'con', path: 'org.eclipse.jst.j2ee.internal.web.container', exported: 'true'])
+    }
+}
+
+eclipse {
+   classpath {
+      downloadSources = true
+   }
+}
+ 
+dependencies {
+   compile 'com.sun.mail:javax.mail:1.5.2' 
+} 
