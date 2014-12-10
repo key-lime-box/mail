@@ -9,6 +9,9 @@ package org.keylimebox.mail;
 /*                                       Imports                                        */
 /*======================================================================================*/
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
 import javax.mail.Part;
 
 /*======================================================================================*/
@@ -134,7 +137,7 @@ public class EmailAttachment
    public String getFileName ()
    {
       try {
-         return Utils.nullAsBlank (part.getFileName ());
+         return ((part.getFileName () == null) ? "No name" : part.getFileName ());
       }
       catch (Throwable myThrowable) {
          return "Error getting filename: " + myThrowable.getMessage ();
@@ -215,6 +218,35 @@ public class EmailAttachment
       }
       catch (Throwable myThrowable) {
          return "Error getting disposition: " + myThrowable.getMessage ();
+      }
+   }
+
+         /*=============================================================================*/
+         /* OPERATION:   getAsBytes                                                    */
+         /**
+          * Returns the attachment itself as a byte array.
+          * <p>
+          * @return
+          * <p>
+          * @since Dec 8, 2014
+          */
+         /*=============================================================================*/
+   public byte[] getAsBytes ()
+   {
+      try {
+         InputStream             myInputStream  = part.getInputStream ();
+         ByteArrayOutputStream   myOutputStream = new ByteArrayOutputStream ();
+         int                     myReads        = myInputStream.read ();
+
+         while (myReads != -1) {
+            myOutputStream.write (myReads);
+            myReads = myInputStream.read ();
+         }
+
+         return myOutputStream.toByteArray ();
+      }
+      catch (Throwable myThrowable) {
+         throw new RuntimeException ("Unable to retrieve the attachment bytes: " + myThrowable.getMessage ());
       }
    }
 
