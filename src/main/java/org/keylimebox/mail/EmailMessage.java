@@ -398,7 +398,7 @@ public class EmailMessage
 
                   EmailAttachment   myAtt       = new EmailAttachment (myMp.getBodyPart (i), i);
 
-                  if (myAtt.isType ("multipart/alternative")) {
+                  if (myAtt.isType ("multipart/*")) {
                      continue;
                   }
                   else if (myAtt.isType ("text/*") && "attachment".equalsIgnoreCase (myAtt.getDisposition ()) == false) {
@@ -419,6 +419,36 @@ public class EmailMessage
          }
       }
       return attachments;
+   }
+
+         /*=============================================================================*/
+         /* OPERATION:   getAttachment                                                  */
+         /**
+          * Gets a specific attachment by its part number.
+          * <p>
+          * @param aPartNumber
+          * @return
+          * <p>
+          * @since Dec 8, 2014
+          */
+         /*=============================================================================*/
+   public EmailAttachment getAttachment (int aPartNumber)
+   {
+      try {
+         if (message.isMimeType ("multipart/*")) {
+            Multipart myMp    = (Multipart) message.getContent ();
+            return new EmailAttachment (myMp.getBodyPart (aPartNumber), aPartNumber);
+         }
+         else {
+            throw new RuntimeException ("This email does not have attachments");
+         }
+      }
+      catch (MessagingException myException) {
+         throw new RuntimeException ("Can't read the email");
+      }
+      catch (IOException myException) {
+         throw new RuntimeException ("Can't read the email");
+      }
    }
 
          /*=============================================================================*/
