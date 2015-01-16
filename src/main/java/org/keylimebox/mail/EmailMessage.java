@@ -554,6 +554,28 @@ public class EmailMessage
    }
 
 
+         /*=============================================================================*/
+         /* OPERATION:   getHeader                                                      */
+         /**
+          * Returns the values of a given header.
+          * <p>
+          * @param aHeaderName
+          * @return
+          * <p>
+          * @since Jan 16, 2015
+          */
+         /*=============================================================================*/
+   public String[] getHeader (String aHeaderName)
+   {
+      try {
+         return message.getHeader (aHeaderName);
+      }
+      catch (MessagingException myException) {
+         return new String [] {"Error getting this header: " + myException.getMessage ()};
+      }
+   }
+
+
 
     /*==================================================================================*/
     /* Attribute Set Operations                                                         */
